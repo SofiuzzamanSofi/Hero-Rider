@@ -1,5 +1,6 @@
 import { GoogleAuthProvider } from 'firebase/auth'
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 
 function Login() {
@@ -7,10 +8,14 @@ function Login() {
     // // googleProvider ---
     const googleProvider = new GoogleAuthProvider();
     const { loginSocial } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+
     const loginWithSocialButton = () => {
         loginSocial(googleProvider)
             .then(result => {
                 console.log("googlelogin:", result?.user);
+                navigate("/register")
             }).catch(err => {
                 console.log("error from google provider catch section:", err);
             })
