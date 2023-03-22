@@ -3,6 +3,7 @@ import Home from "../pages/Home/Home";
 import HomeDetails from "../pages/Home/HomeDetails";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Login/Register";
+import PrivetRoute from "./PrivetRoute";
 
 const route = createBrowserRouter([
     {
@@ -19,7 +20,7 @@ const route = createBrowserRouter([
             },
             {
                 path: "/register",
-                element: <Register />
+                element: <PrivetRoute><Register /></PrivetRoute>
             },
         ]
     }

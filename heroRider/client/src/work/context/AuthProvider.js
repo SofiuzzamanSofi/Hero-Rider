@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    // console.log(user);
+    console.log("user:authpage:", user);
 
     const createNewUser = (email, password) => {
         setLoading(true);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
     const loginSocial = (provider) => {
-        setLoading(true);
+        // setLoading(true);
         return signInWithPopup(auth, provider);
     };
     const logOut = () => {
