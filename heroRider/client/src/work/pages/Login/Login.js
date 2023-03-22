@@ -1,11 +1,19 @@
 import { GoogleAuthProvider } from 'firebase/auth'
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../../context/AuthProvider';
 
 function Login() {
 
+    // // googleProvider ---
     const googleProvider = new GoogleAuthProvider();
+    const { loginSocial } = useContext(AuthContext);
     const loginWithSocialButton = () => {
-
+        loginSocial(googleProvider)
+            .then(result => {
+                console.log("googlelogin:", result?.user);
+            }).catch(err => {
+                console.log("error from google provider catch section:", err);
+            })
     }
 
     return (

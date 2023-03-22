@@ -4,12 +4,12 @@ import { app } from '../Firebase/firebase.init';
 
 
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 const auth = getAuth(app)
 
 
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
 
 
     const [user, setUser] = useState(null);
@@ -52,6 +52,4 @@ const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     )
-}
-
-export { AuthProvider, AuthContext };
+};
