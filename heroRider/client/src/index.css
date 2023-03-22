@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .middle-div {
+  min-height: calc(100vh - 200px);
+
+} */
+
+
+@media (min-width: 768px) {
+  .middle-div {
+    min-height: calc(100vh - 284px);
+  }
+}
+
+/* @media only screen and (min-width: 768){
+
+} */
