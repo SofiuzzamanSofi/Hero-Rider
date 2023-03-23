@@ -17,13 +17,26 @@ app.use(express.json());
 // mongodb --- 
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@cluster0.zwgt8km.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-const contentsCollection = client.db("redux-thunk-practice").collection("contents");
+const usersCollection = client.db("heroRider").collection("users");
 
 
 
 async function run() {
     try {
 
+        // create user on database --- 
+        app.post("/users", async (req, res) => {
+            const userInfo = req.body;
+            console.log("body", { userInfo });
+            const result = await usersCollection.insertOne(userInfo);
+            if (result.acknowledged) {
+                res.status(200).send({
+                    success: true,
+                    message: "Successfully create a user",
+                    data: result,
+                });
+            }
+        })
     }
     catch (err) {
         console.log(`error from run function under => catch section: ${err}`.bgRed);

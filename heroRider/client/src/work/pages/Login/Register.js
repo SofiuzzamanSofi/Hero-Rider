@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider';
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import axios from 'axios';
 
 
 function Register() {
@@ -18,6 +19,8 @@ function Register() {
 
     const formSubmitFunction = e => {
         e.preventDefault();
+        const aaaa = `${process.env.REACT_APP_SERVER_URL}/users`;
+        console.log("aaaa");
         const form = e.target;
         // console.log("clg:", form?.firstName?.value);
         const name = form?.firstName?.value + " " + form?.lastName?.value;
@@ -104,7 +107,19 @@ function Register() {
 
                 }
                 // console.log("allUrls:", allUrls);
+                console.log("url::", "aaaa");
+
+
+
                 console.log("userInfo:", userInfo);
+                const aaaa = `${process.env.REACT_APP_SERVER_URL}/users`;
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/users`, userInfo)
+                    .then(res => {
+                        if (res?.data?.success) {
+
+                            console.log(res?.data);
+                        }
+                    }).catch(erro => console.log(erro))
                 setLoadingButton(false);
             })
             .catch((error) => console.error(error));
