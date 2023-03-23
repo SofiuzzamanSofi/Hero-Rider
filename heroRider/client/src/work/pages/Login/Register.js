@@ -271,14 +271,21 @@ function Register() {
                                         <div className="col-span-full">
                                             <p className="font-medium">Password Information</p>
                                         </div>
-                                        <div className="col-span-full sm:col-span-3">
-                                            <label htmlFor="password" className="text-sm">Password</label>
-                                            <input id="password" name="password" type="password" placeholder="password" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
-                                        </div>
-                                        <div className="col-span-full sm:col-span-3">
-                                            <label htmlFor="confirm-password" className="text-sm">Confirm Password</label>
-                                            <input id="confirm-password" name="confirm-password" type="password" placeholder="confirm-password" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
-                                        </div>
+                                        {
+                                            user?.uid ?
+                                                ""
+                                                :
+                                                <>
+                                                    <div className="col-span-full sm:col-span-3">
+                                                        <label htmlFor="password" className="text-sm">Password</label>
+                                                        <input id="password" name="password" type="password" placeholder="password" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                                    </div>
+                                                    <div className="col-span-full sm:col-span-3">
+                                                        <label htmlFor="confirm-password" className="text-sm">Confirm Password</label>
+                                                        <input id="confirm-password" name="confirm-password" type="password" placeholder="confirm-password" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                                    </div>
+                                                </>
+                                        }
                                         <div className="col-span-full">
 
                                             <button type="submit" className="px-4 py-2 border rounded-md border-gray-100 btn" disabled={loadignButton}>

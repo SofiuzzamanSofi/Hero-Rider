@@ -36,6 +36,27 @@ async function run() {
                     data: result,
                 });
             }
+        });
+
+        //get one user --
+        app.post("/user", async (req, res) => {
+            console.log("object");
+            const email = req.query.email;
+            const result = await usersCollection.findOne({ email });
+            // console.log("result", result);
+            if (result) {
+                console.log(result);
+                res.send({
+                    success: true,
+                    message: "Successfully get all products",
+                    data: result,
+                });
+            } else {
+                res.send({
+                    success: false,
+                    message: "No user found on this email",
+                });
+            }
         })
     }
     catch (err) {
@@ -53,6 +74,7 @@ run().catch(error => {
 
 
 app.get("/", (req, res) => {
+    console.log("browser hit");
     res.status(200).send({
         success: true,
         data: `This is Hero Ride server. Alhamdulillah Running on port: ${port}`,

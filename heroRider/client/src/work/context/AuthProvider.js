@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, signOut, updateProfile } from "firebase/auth";
 import { app } from '../Firebase/firebase.init';
 
 
@@ -31,6 +31,10 @@ export const AuthProvider = ({ children }) => {
         // setLoading(true);
         return signInWithPopup(auth, provider);
     };
+    const forgetPassword = (email) => {
+        // setLoading(true);
+        return sendPasswordResetEmail(auth, email);
+    };
     const logOut = () => {
         setLoading(true);
         return signOut(auth);
@@ -45,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const noImageFoundUrl = "https://e7.pngegg.com/pngimages/829/733/png-clipart-logo-brand-product-trademark-font-not-found-logo-brand.png";
-    const authInfo = { createNewUser, login, user, setUser, loading, setLoading, logOut, updateUser, loginSocial, noImageFoundUrl };
+    const authInfo = { createNewUser, login, user, setUser, loading, setLoading, forgetPassword, logOut, updateUser, loginSocial, noImageFoundUrl };
 
     return (
         <AuthContext.Provider value={authInfo}>
