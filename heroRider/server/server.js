@@ -27,7 +27,7 @@ async function run() {
         // create user on database --- 
         app.post("/users", async (req, res) => {
             const userInfo = req.body;
-            console.log("body", { userInfo });
+            // console.log("body", { userInfo });
             const result = await usersCollection.insertOne(userInfo);
             if (result.acknowledged) {
                 res.status(200).send({

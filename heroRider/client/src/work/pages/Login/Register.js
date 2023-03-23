@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthProvider';
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 function Register() {
@@ -10,7 +11,7 @@ function Register() {
     const { loading, setLoading, user } = useContext(AuthContext);
     const [clickType, setClickType] = useState(false);
     const [loadignButton, setLoadingButton] = useState(false);
-
+    const navigate = useNavigate();
     const clickTypeFunction = (path) => {
         setClickType(path)
     };
@@ -19,8 +20,6 @@ function Register() {
 
     const formSubmitFunction = e => {
         e.preventDefault();
-        const aaaa = `${process.env.REACT_APP_SERVER_URL}/users`;
-        console.log("aaaa");
         const form = e.target;
         // console.log("clg:", form?.firstName?.value);
         const name = form?.firstName?.value + " " + form?.lastName?.value;
@@ -106,21 +105,15 @@ function Register() {
 
 
                 }
-                // console.log("allUrls:", allUrls);
-                console.log("url::", "aaaa");
-
-
-
                 console.log("userInfo:", userInfo);
-                const aaaa = `${process.env.REACT_APP_SERVER_URL}/users`;
                 axios.post(`${process.env.REACT_APP_SERVER_URL}/users`, userInfo)
                     .then(res => {
                         if (res?.data?.success) {
-
                             console.log(res?.data);
                         }
+                        setLoadingButton(false);
+                        navigate("/profile")
                     }).catch(erro => console.log(erro))
-                setLoadingButton(false);
             })
             .catch((error) => console.error(error));
 
@@ -182,15 +175,15 @@ function Register() {
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="firstName" className="text-sm">First name</label>
-                                            <input id="firstName" name="firstName" type="text" placeholder="First name" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                            <input id="firstName" name="firstName" type="text" placeholder="First name" value={user?.displayName} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="lastName" className="text-sm">Last name</label>
-                                            <input id="lastName" name="lastName" type="text" placeholder="Last name" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                            <input id="lastName" name="lastName" type="text" placeholder="Last name" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" />
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="email" className="text-sm">Email</label>
-                                            <input id="email" name="email" type="email" placeholder="Email" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                            <input id="email" name="email" type="email" placeholder="Email" value={user?.email} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" disabled />
                                         </div>
                                         {/* <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="age" className="text-sm">Age</label>
