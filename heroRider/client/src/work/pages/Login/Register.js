@@ -1,6 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider';
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { async } from '@firebase/util';
+
+
 
 
 function Register() {
@@ -13,6 +17,7 @@ function Register() {
         setClickType(path)
     };
     console.log("::::", clickType);
+
 
 
 
@@ -38,6 +43,72 @@ function Register() {
         const description = form?.description?.value;
         const password = form?.password?.value;
         const confirmPassword = form?.["confirm-password"]?.value;
+
+
+        // image upload on firebase --- 
+        const storage = getStorage();
+        const drivingLicenseRef = ref(storage, `hero-rider/${drivingLicense?.name}`);
+        const nidRef = ref(storage, `hero-rider/${nid?.name}`);
+        const profilePhotoRef = ref(storage, `hero-rider/${profilePhoto?.name}`);
+
+
+        // const fileUploadFunction = async (storageOfRef, file) => {
+        //     uploadBytes(storageOfRef, file)
+        //         .then((snapshot) => {
+        //             getDownloadURL(snapshot.ref)
+        //                 .then((url) => {
+        //                     return url;
+        //                 })
+        //         })
+        // }
+
+        const fileUploadFunction = async (storageOfRef, file) => {
+            return new Promise((resolve, reject) => {
+                uploadBytes(storageOfRef, file)
+                    .then((snapshot) => {
+                        getDownloadURL(snapshot.ref)
+                            .then((url) => {
+                                resolve(url);
+                            })
+                            .catch((error) => reject(error));
+                    })
+                    .catch((error) => reject(error));
+            });
+        }
+
+
+        const uploadImageAll = async () => {
+            const promises = [];
+            if (drivingLicenseRef) promises.push(fileUploadFunction(drivingLicenseRef, drivingLicense));
+            if (nidRef) promises.push(fileUploadFunction(nidRef, nid));
+            if (profilePhotoRef) promises.push(fileUploadFunction(profilePhotoRef, profilePhoto));
+
+            const urls = await Promise.all(promises);
+            return urls;
+        }
+        uploadImageAll()
+            .then((allUrls) => console.log("allUrls:", allUrls))
+            .catch((error) => console.error(error));
+
+        // Promise.all([
+        //     uploadBytes(drivingLicenseRef, drivingLicense),
+        //     uploadBytes(nidRef, nid),
+        //     uploadBytes(profilePhotoRef, profilePhoto),
+        // ])
+        //     .then((snapshots) => {
+        //         const downloadURLPromises = [];
+        //         snapshots.forEach((snapshot) => {
+        //             downloadURLPromises.push(getDownloadURL(snapshot.ref));
+        //         });
+        //         console.log("downloadURLPromises", downloadURLPromises);
+        //         return Promise.all(downloadURLPromises);
+        //     })
+        //     .then((downloadURLs) => {
+        //         console.log("urls:", downloadURLs);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
 
         console.log({
             drivingLicense,
