@@ -175,7 +175,7 @@ function Register() {
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="firstName" className="text-sm">First name</label>
-                                            <input id="firstName" name="firstName" type="text" placeholder="First name" value={user?.displayName} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                            <input id="firstName" name="firstName" type="text" placeholder="First name" defaultValue={user?.displayName} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="lastName" className="text-sm">Last name</label>
@@ -183,12 +183,8 @@ function Register() {
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="email" className="text-sm">Email</label>
-                                            <input id="email" name="email" type="email" placeholder="Email" value={user?.email} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" disabled />
+                                            <input id="email" name="email" type="email" placeholder="Email" defaultValue={user?.email} className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" disabled />
                                         </div>
-                                        {/* <div className="col-span-full sm:col-span-3">
-                                            <label htmlFor="age" className="text-sm">Age</label>
-                                            <input id="age" name="age" type="age" placeholder="age" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
-                                        </div> */}
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="age" className="text-sm">Age</label>
                                             <input type="date" name="age" placeholder="age" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
