@@ -19,8 +19,6 @@ function Register() {
     console.log("::::", clickType);
 
 
-
-
     const formSubmitFunction = e => {
         e.preventDefault();
         const form = e.target;
@@ -52,16 +50,6 @@ function Register() {
         const profilePhotoRef = ref(storage, `hero-rider/${profilePhoto?.name}`);
 
 
-        // const fileUploadFunction = async (storageOfRef, file) => {
-        //     uploadBytes(storageOfRef, file)
-        //         .then((snapshot) => {
-        //             getDownloadURL(snapshot.ref)
-        //                 .then((url) => {
-        //                     return url;
-        //                 })
-        //         })
-        // }
-
         const fileUploadFunction = async (storageOfRef, file) => {
             return new Promise((resolve, reject) => {
                 uploadBytes(storageOfRef, file)
@@ -83,32 +71,13 @@ function Register() {
             if (nidRef) promises.push(fileUploadFunction(nidRef, nid));
             if (profilePhotoRef) promises.push(fileUploadFunction(profilePhotoRef, profilePhoto));
 
-            const urls = await Promise.all(promises);
-            return urls;
+            return await Promise.all(promises);
+
         }
         uploadImageAll()
             .then((allUrls) => console.log("allUrls:", allUrls))
             .catch((error) => console.error(error));
 
-        // Promise.all([
-        //     uploadBytes(drivingLicenseRef, drivingLicense),
-        //     uploadBytes(nidRef, nid),
-        //     uploadBytes(profilePhotoRef, profilePhoto),
-        // ])
-        //     .then((snapshots) => {
-        //         const downloadURLPromises = [];
-        //         snapshots.forEach((snapshot) => {
-        //             downloadURLPromises.push(getDownloadURL(snapshot.ref));
-        //         });
-        //         console.log("downloadURLPromises", downloadURLPromises);
-        //         return Promise.all(downloadURLPromises);
-        //     })
-        //     .then((downloadURLs) => {
-        //         console.log("urls:", downloadURLs);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
 
         console.log({
             drivingLicense,
