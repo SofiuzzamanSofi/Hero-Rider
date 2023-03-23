@@ -2,9 +2,6 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider';
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { async } from '@firebase/util';
-
-
 
 
 function Register() {
@@ -16,13 +13,13 @@ function Register() {
     const clickTypeFunction = (path) => {
         setClickType(path)
     };
-    console.log("::::", clickType);
+    // console.log("::::", clickType);
 
 
     const formSubmitFunction = e => {
         e.preventDefault();
         const form = e.target;
-        console.log("clg:", form?.firstName?.value);
+        // console.log("clg:", form?.firstName?.value);
         const name = form?.firstName?.value + " " + form?.lastName?.value;
         const email = form?.email?.value;
         const age = form?.age?.value;
@@ -35,12 +32,14 @@ function Register() {
         const nid = form?.nid?.files[0];
         const profilePhoto = form?.["profile-photo"]?.files[0];
 
+        const vehiclesType = form?.["vehicles-type"]?.value;
         const companyName = form?.["company-name"]?.value;
         const model = form?.model?.value;
         const registrationNumber = form?.["registration-number"]?.value;
         const description = form?.description?.value;
         const password = form?.password?.value;
         const confirmPassword = form?.["confirm-password"]?.value;
+        if (password !== confirmPassword) return alert("password don't match");
 
 
         // image upload on firebase --- 
@@ -66,40 +65,50 @@ function Register() {
 
 
         const uploadImageAll = async () => {
+            setLoadingButton(true);
             const promises = [];
+            if (profilePhotoRef) promises.push(fileUploadFunction(profilePhotoRef, profilePhoto));
+
             if (drivingLicenseRef) promises.push(fileUploadFunction(drivingLicenseRef, drivingLicense));
             if (nidRef) promises.push(fileUploadFunction(nidRef, nid));
-            if (profilePhotoRef) promises.push(fileUploadFunction(profilePhotoRef, profilePhoto));
 
             return await Promise.all(promises);
 
         }
         uploadImageAll()
-            .then((allUrls) => console.log("allUrls:", allUrls))
+            .then((allUrls) => {
+                const userInfo = {
+                    userType: clickType,
+                    regTime: new Date(),
+                    name,
+                    email,
+                    age,
+                    address,
+                    number,
+                    state,
+                    description,
+                    password,
+
+                    licenseNumber: licenseNumber || "",
+                    companyName: companyName || "",
+                    model: model || "",
+                    registrationNumber: registrationNumber || "",
+                    vehiclesType: vehiclesType || "",
+
+
+                    profilePhoto: allUrls[0],
+
+                    drivingLicense: allUrls[1] || "",
+                    nid: allUrls[2] || "",
+
+
+                }
+                // console.log("allUrls:", allUrls);
+                console.log("userInfo:", userInfo);
+                setLoadingButton(false);
+            })
             .catch((error) => console.error(error));
 
-
-        console.log({
-            drivingLicense,
-            nid,
-            profilePhoto,
-        });
-
-        // console.log({
-        //     name,
-        //     email,
-        //     age,
-        //     address,
-        //     number,
-        //     state,
-        //     licenseNumber,
-        //     companyName,
-        //     model,
-        //     registrationNumber,
-        //     description,
-        //     password,
-        //     confirmPassword,
-        // });
     }
 
 
@@ -168,9 +177,13 @@ function Register() {
                                             <label htmlFor="email" className="text-sm">Email</label>
                                             <input id="email" name="email" type="email" placeholder="Email" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
                                         </div>
-                                        <div className="col-span-full sm:col-span-3">
+                                        {/* <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="age" className="text-sm">Age</label>
                                             <input id="age" name="age" type="age" placeholder="age" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
+                                        </div> */}
+                                        <div className="col-span-full sm:col-span-3">
+                                            <label htmlFor="age" className="text-sm">Age</label>
+                                            <input type="date" name="age" placeholder="age" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
                                         </div>
                                         <div className="col-span-full">
                                             <label htmlFor="address" className="text-sm">Address</label>
@@ -223,9 +236,9 @@ function Register() {
                                         </div>
                                         <div className="col-span-full sm:col-span-3">
                                             <label htmlFor="vehicles-type" className="text-sm">Vehicles Type</label>
-                                            <select className="select select-bordered w-full max-w-xs">
-                                                <option>Car</option>
-                                                <option>Motorcycle</option>
+                                            <select className="select select-bordered w-full max-w-xs" name='vehicles-type'>
+                                                <option value="Car">Car</option>
+                                                <option value="Motorcycle">Motorcycle</option>
                                             </select>
                                         </div>
                                         {
