@@ -43,7 +43,7 @@ async function run() {
             // console.log("object");
             const email = req.query.email;
             const result = await usersCollection.findOne({ email });
-            // console.log("result", result);
+            console.log("result", { email });
             if (result) {
                 // console.log(result);
                 res.send({

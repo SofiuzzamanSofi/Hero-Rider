@@ -125,7 +125,7 @@ function Register() {
                     email,
                     age,
                     address,
-                    number,
+                    phoneNumber: number,
                     state,
                     description,
 
