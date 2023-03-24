@@ -40,12 +40,12 @@ async function run() {
 
         //get one user --
         app.post("/user", async (req, res) => {
-            console.log("object");
+            // console.log("object");
             const email = req.query.email;
             const result = await usersCollection.findOne({ email });
             // console.log("result", result);
             if (result) {
-                console.log(result);
+                // console.log(result);
                 res.send({
                     success: true,
                     message: "Successfully get all products",

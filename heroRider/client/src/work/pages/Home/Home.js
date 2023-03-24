@@ -6,11 +6,11 @@ import Header from '../Header/Header'
 function Home() {
     return (
         <div>
-            <div><Header></Header></div>
+            <Header />
             <div className='middle-div relative'>
                 <Outlet></Outlet>
             </div>
-            <div><Footer></Footer></div>
+            <Footer />
         </div>
     )
 }
