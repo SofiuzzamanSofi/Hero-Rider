@@ -1,14 +1,21 @@
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import hIcon from "../../assets/hIcon.png"
 import { AuthContext } from '../../context/AuthProvider';
+import { FaTimes } from "react-icons/fa";
+
+
+
+
+
 
 function Header() {
 
 
     const { user, createNewUser, updateUser, logOut, setUser, noImageFoundUrl } = useContext(AuthContext);
     const [miniProfile, setMiniProfile] = useState(false);
+    const navigate = useNavigate();
     console.log(miniProfile);
 
 
@@ -16,23 +23,41 @@ function Header() {
     const logOutFunction = () => {
         logOut()
             .then(() => {
-                // Sign-out successful.
-                setUser(null);
+                setMiniProfile(false)
                 toast.success('Log Out Successful.')
-            }).catch((error) => {
+                setUser(null);
+                navigate("/login")
+            }).catch(() => {
                 // An error happened.
                 toast.error('Log Out UnSuccess, Something Happened Unnecessary.')
             });
     };
 
 
+
+    // mini screen and log out button ---
+    const miniPicAnimationCssClass = `bg-slate-300 dark:bg-slate-900 text-black dark:text-white absolute top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center flex-col gap-5 fixed duration-300 transition-all ${!miniProfile ? "translate-x-0" : "translate-x-full"}`
     const miniProfileHTML = <>
-        <div>
+        <div
+            className={miniPicAnimationCssClass}
+        >
+            <div>
+                <button
+                    className='absolute top-10 left-10'
+                >
+                    <FaTimes className='w-8 h-8'
+                        onClick={() => setMiniProfile(prv => !prv)}
+                    />
+                </button>
+            </div>
+            <div>
+                <Link to="/profile">Dashboard</Link>
+            </div>
             <div>
                 <Link to="/profile">Profile</Link>
             </div>
             <div>
-                <Link to="/" className="btn"
+                <Link to="/" className="text-red-600 hover:border border-red-600 px-10 py-3 rounded-md"
                     onClick={logOutFunction}
                 >
                     Log Out
