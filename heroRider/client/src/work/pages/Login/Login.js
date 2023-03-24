@@ -3,78 +3,93 @@ import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useHistory } from "react-router";
 import axios from 'axios';
-
+import toast from 'react-hot-toast';
 import { AuthContext } from '../../context/AuthProvider';
+
+
+
+
+
 
 function Login() {
 
-    // // googleProvider ---
+    // // googleProvider initialized---
     const googleProvider = new GoogleAuthProvider();
+
     const { loginSocial, login, forgetPassword, setLoading, setUser } = useContext(AuthContext);
     const navigate = useNavigate();
-    // const history = useHistory()
 
 
-    const loginIdPw = (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const email = form?.email?.value;
-        const password = form?.password?.value;
-        // console.log("clg:", email, password);
-        login(email, password)
-            .then(result => {
-                navigate("/profile")
-                console.log("result");
-                // navigate(from, { replace: true });
-            })
-            .catch(error => {
-                forgetPassword(email)
-                    .then(() => {
-                        console.log("setpassword then");
-                    })
-                    .catch(err => {
-                        console.log("setpassword catch");
-
-                    })
-                // setUser({ email, })
-                // setLoading(false);
-                // navigate("/register")
-                // console.log(error)
-            });
-    }
 
 
-    const loginWithSocialButton = () => {
-        loginSocial(googleProvider)
-            .then(result => {
-                // history?.push({
-                //     pathname: "/register",
-                //     state: {
-                //         user: result?.user,
-                //     }
-                // })
-                // console.log("googlelogin:", result?.user);
-                checkIfUserOnDborNot(result?.user?.email)
-                // navigate("/register")
-            }).catch(err => {
-                console.log("error from google provider catch section:", err);
-            })
-    };
-
-    const checkIfUserOnDborNot = eml => {
+    // check user on database or not ---
+    const checkIfUserOnDBorNot = eml => {
         axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${eml}`)
             .then(res => {
                 if (res?.data?.success) {
-                    navigate("/profile");
+                    toast.success(`Successfully login ${res?.data?.displayName}.`)
+                    navigate("/profile")
                 } else {
                     navigate("/register");
                 }
             })
     }
 
+
+
+    // email & password input from submit function ---
+    const loginIdPw = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const email = form?.email?.value;
+        const password = form?.password?.value;
+
+
+        // email & password input function ---
+        login(email, password)
+            .then(result => {
+                checkIfUserOnDBorNot(result?.user?.email)
+            })
+            .catch(() => {
+                // forget password function ---
+                forgetPassword(email)
+                    .then(() => {
+                        toast.error(` 
+                        Oh you forget your password egain \n\n
+                        Don't Worry. \n\n
+                        Forget Password request send to: ${email}. \n\n
+                        Check your Email Pls.
+                        `)
+                    })
+                    .catch(err => {
+                        toast(`Welcome ${email} Pls Fillup All Steps.`);
+                        setUser({ email, })
+                        navigate("/register")
+                    })
+                setLoading(false);
+            });
+    }
+
+
+
+
+    // google login button---
+    const loginWithSocialButton = () => {
+        loginSocial(googleProvider)
+            .then(result => {
+                checkIfUserOnDBorNot(result?.user?.email)
+            }).catch(err => {
+                console.log("error from google provider catch section:", err);
+            })
+    };
+
+
+
+
+
+
     return (
         <div className='flex justify-center items-center md:absolute top-0 right-0 left-0 bottom-0 my-10 md:my-0'>
-
             <div className='border rounded-sm'>
                 <div>
                     <form

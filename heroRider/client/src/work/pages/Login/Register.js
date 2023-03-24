@@ -4,24 +4,54 @@ import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+
+
 
 
 function Register() {
 
-    const { loading, setLoading, user } = useContext(AuthContext);
+    const { user, createNewUser, updateUser } = useContext(AuthContext);
     const [clickType, setClickType] = useState(false);
-    const [loadignButton, setLoadingButton] = useState(false);
+    const [loadingButton, setLoadingButton] = useState(false);
     const navigate = useNavigate();
+
+
+    // second steps rider or learner ---
     const clickTypeFunction = (path) => {
         setClickType(path)
     };
-    // console.log("::::", clickType);
 
 
+    // create user on AUTHENTICATION --
+    const userSetOnAuthentication = (email, password, userInfo2) => {
+        console.log("thisi is uth:::", email, password, userInfo2);
+        createNewUser(email, password)
+            .then(() => {
+                updateUser(userInfo2)
+                    .then(() => {
+                        toast.success(`Image host, create user , update user name and image all work successfully; Well DONE${userInfo2?.displayName}.`)
+                        setLoadingButton(true);
+                        navigate("/profile")
+                    })
+                    .catch(() => {
+                        toast.error("image, name catch error on AUTHENTICATION")
+                        setLoadingButton(true);
+                    });
+            }).catch(() => {
+                toast.error("AUTHENTICATION cath error.")
+            });
+    }
+
+
+
+
+
+
+    // from submit function ---
     const formSubmitFunction = e => {
         e.preventDefault();
         const form = e.target;
-        // console.log("clg:", form?.firstName?.value);
         const name = form?.firstName?.value + " " + form?.lastName?.value;
         const email = form?.email?.value;
         const age = form?.age?.value;
@@ -29,11 +59,9 @@ function Register() {
         const number = form?.number?.value;
         const state = form?.state?.value;
         const licenseNumber = form?.["license-number"]?.value;
-
         const drivingLicense = form?.["driving-license"]?.files[0];
         const nid = form?.nid?.files[0];
         const profilePhoto = form?.["profile-photo"]?.files[0];
-
         const vehiclesType = form?.["vehicles-type"]?.value;
         const companyName = form?.["company-name"]?.value;
         const model = form?.model?.value;
@@ -41,7 +69,14 @@ function Register() {
         const description = form?.description?.value;
         const password = form?.password?.value;
         const confirmPassword = form?.["confirm-password"]?.value;
-        if (password !== confirmPassword) return alert("password don't match");
+
+
+        // password chek if login input password --
+        if (password !== confirmPassword) return toast.error("password don't match");
+        if (!user?.uid && (5 >= password.length)) return toast.error("password must be at least 6 character.")
+
+
+
 
 
         // image upload on firebase --- 
@@ -50,7 +85,7 @@ function Register() {
         const nidRef = ref(storage, `hero-rider/${nid?.name}`);
         const profilePhotoRef = ref(storage, `hero-rider/${profilePhoto?.name}`);
 
-
+        // image upload function on FIREBASE --
         const fileUploadFunction = async (storageOfRef, file) => {
             return new Promise((resolve, reject) => {
                 uploadBytes(storageOfRef, file)
@@ -66,6 +101,7 @@ function Register() {
         }
 
 
+        // create image path and url and bucket on FIREBASE && call upper function  ^^---
         const uploadImageAll = async () => {
             setLoadingButton(true);
             const promises = [];
@@ -77,19 +113,22 @@ function Register() {
             return await Promise.all(promises);
 
         }
+
+
+        // all 3 images function ^^ call ---
         uploadImageAll()
             .then((allUrls) => {
-                const userInfo = {
+                const userInfo1 = {
                     userType: clickType,
                     regTime: new Date(),
-                    name,
+                    displayName: name,
                     email,
                     age,
                     address,
                     number,
                     state,
                     description,
-                    password,
+
 
                     licenseNumber: licenseNumber || "",
                     companyName: companyName || "",
@@ -98,30 +137,55 @@ function Register() {
                     vehiclesType: vehiclesType || "",
 
 
-                    profilePhoto: allUrls[0],
+                    photoURL: allUrls[0],
 
                     drivingLicense: allUrls[1] || "",
                     nid: allUrls[2] || "",
 
 
                 }
-                console.log("userInfo:", userInfo);
-                axios.post(`${process.env.REACT_APP_SERVER_URL}/users`, userInfo)
+                // console.log("userInfo:", userInfo);
+
+
+                // ALL INFO / store user on MONGODB ---
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/users`, userInfo1)
                     .then(res => {
                         if (res?.data?.success) {
-                            console.log(res?.data);
+                            if (!user?.uid) {
+                                userSetOnAuthentication(
+                                    email,
+                                    password,
+                                    {
+                                        displayName: name,
+                                        photoURL: allUrls[0],
+                                    }
+                                )
+                            } else {
+                                toast.success(`Successfully aLL WORK; Well DONE${user?.displayName}.`)
+                                setLoadingButton(false);
+                                navigate("/profile")
+                            }
                         }
-                        setLoadingButton(false);
-                        navigate("/profile")
                     }).catch(erro => console.log(erro))
+
+
+
             })
             .catch((error) => console.error(error));
 
-    }
+    };
+
+
+
+
+
+
+
 
 
     return (
         <div className={`flex justify-center items-center ${clickType ? "" : "md:absolute top-0 right-0 left-0 bottom-0"} my-10 md:my-0`}>
+
 
 
             {/* path user type ---  */}
@@ -155,6 +219,11 @@ function Register() {
                     <li className="step">Finish</li>
                 </ul>
             </div>
+
+
+
+
+
 
             {/* user from ---  */}
             <div
@@ -288,8 +357,8 @@ function Register() {
                                         }
                                         <div className="col-span-full">
 
-                                            <button type="submit" className="px-4 py-2 border rounded-md border-gray-100 btn" disabled={loadignButton}>
-                                                {loadignButton ? "Loading..." : "Register"}
+                                            <button type="submit" className="px-4 py-2 border rounded-md border-gray-100 btn" disabled={loadingButton}>
+                                                {loadingButton ? "Loading..." : "Register"}
                                             </button>
 
                                         </div>
