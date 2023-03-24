@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import hIcon from "../../assets/hIcon.png"
 import { AuthContext } from '../../context/AuthProvider';
 import { FaTimes } from "react-icons/fa";
@@ -13,10 +13,11 @@ import { FaTimes } from "react-icons/fa";
 function Header() {
 
 
-    const { user, createNewUser, updateUser, logOut, setUser, noImageFoundUrl } = useContext(AuthContext);
+    const { user, logOut, setUser, noImageFoundUrl } = useContext(AuthContext);
     const [miniProfile, setMiniProfile] = useState(false);
     const navigate = useNavigate();
-    console.log(miniProfile);
+    const location = useLocation();
+
 
 
 
@@ -35,8 +36,20 @@ function Header() {
 
 
 
+    // miniPic off ---
+    useEffect(() => {
+        setMiniProfile(false);
+    }, [location?.pathname]);
+
+    miniProfile &&
+        window.addEventListener("scroll", () => {
+            setMiniProfile(false);
+        });
+
+
+
     // mini screen and log out button ---
-    const miniPicAnimationCssClass = `bg-slate-300 dark:bg-slate-900 text-black dark:text-white absolute top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center flex-col gap-5 fixed duration-300 transition-all ${!miniProfile ? "translate-x-0" : "translate-x-full"}`
+    const miniPicAnimationCssClass = `bg-slate-300 dark:bg-slate-900 text-black dark:text-white absolute top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center flex-col gap-5 fixed ${miniProfile ? "translate-x-0" : "translate-x-full"} duration-300 transition-all`
     const miniProfileHTML = <>
         <div
             className={miniPicAnimationCssClass}
@@ -126,18 +139,13 @@ function Header() {
                         :
                         <img
                             className='rounded-full w-12 h-12 cursor-pointer'
-                            src={user?.photoURL || noImageFoundUrl} alt="" title='click to details'
+                            src={user?.photoURL || noImageFoundUrl} alt="" title={user?.email}
                             onClick={() => setMiniProfile(prv => !prv)}
                         />
                 }
                 {
-                    !user?.uid ?
-                        ""
-                        :
-                        miniProfile ?
-                            ""
-                            :
-                            miniProfileHTML
+                    // mini is shown here --- 
+                    user?.uid && miniProfile && miniProfileHTML
                 }
 
 
