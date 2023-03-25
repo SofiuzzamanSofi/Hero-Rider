@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider';
-import { BsFillArrowRightCircleFill } from "react-icons/bs";
+
+import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import axios from 'axios';
 
 
 
@@ -8,9 +11,8 @@ import { BsFillArrowRightCircleFill } from "react-icons/bs";
 
 function Profile() {
 
-    const { user, createNewUser, updateUser, userFromDB } = useContext(AuthContext);
-    const [clickType, setClickType] = useState(false);
-    const [loadingButton, setLoadingButton] = useState(false);
+    const { user, userFromDB } = useContext(AuthContext);
+    const { dataQuery, setDataQuery } = useState(null)
 
 
     const nameArray = user?.displayName?.split(" ");
@@ -18,11 +20,20 @@ function Profile() {
     const firstName = nameArray.join(" ")
 
 
+
+
+    const { data, refetch } = useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
+            return data.data.data;
+        }
+    })
+
     console.log("userFromDB:1,", userFromDB);
     console.log("userFirebase:2,", user);
-
-
-
+    console.log("dataQuery:", data);
+    console.log("dataQuery:", dataQuery);
 
 
     return (
@@ -43,8 +54,16 @@ function Profile() {
                                 <div className='flex justify-center items-center flex-col gap-2'>
                                     <img src={user?.photoURL} alt="" className='rounded-full max-w-[180px] max-h-[120px]' />
                                     {
-                                        !userFromDB?.payment &&
-                                        <button className='text-red-500 btn btn-xs'>Pay</button>
+                                        !userFromDB?.payment ?
+                                            <>
+                                                <p className='text-sm'>Pay First Pls</p>
+                                                <Link to="/payment" className='text-red-500 btn btn-xs'>Pay</Link>
+                                            </>
+                                            :
+                                            <>
+                                                <p className='text-sm'>Payed Status</p>
+                                                <button className='text-green-500 btn btn-xs'>Success</button>
+                                            </>
                                     }
                                 </div>
 

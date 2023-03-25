@@ -1,7 +1,6 @@
 import { GoogleAuthProvider } from 'firebase/auth'
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useHistory } from "react-router";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../context/AuthProvider';

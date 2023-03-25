@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { app } from '../Firebase/firebase.init';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { useQuery } from 'react-query';
 
 
 
@@ -17,8 +18,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [userFromDB, setUserFromDB] = useState(null);
     const [loading, setLoading] = useState(true);
-    console.log("user AuthProvider:", user);
-    console.log("userFromDB AuthProvider:", userFromDB);
+    // console.log("user AuthProvider:", user);
+    // console.log("userFromDB AuthProvider:", userFromDB);
 
     const createNewUser = (email, password) => {
         setLoading(true);
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }) => {
             }
         };
         return () => checkIfUserOnDBorNot();
-    }, [user?.uid])
+    }, [user])
 
 
 
