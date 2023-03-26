@@ -4,15 +4,19 @@ import { Elements } from "@stripe/react-stripe-js";
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthProvider';
 import CheckoutForm from './PaymentFrom';
+import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 
 
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
 
 function Payment() {
 
-    const { userFromDB } = useContext(AuthContext);
     const [clientSecret, setClientSecret] = useState(null)
-
+    const location = useLocation();
+    const params = new URLSearchParams(location?.search)
+    const email = params.get("email");
+    const vehiclesType = params.get("vehiclesType");
 
 
     const appearance = {
@@ -24,25 +28,34 @@ function Payment() {
     };
 
 
-    // useEffect(() => {
-    //     axios.post(`${process.env.REACT_APP_SERVER_URL}/create-payment-intent`, { items: userFromDB?.vehiclesType })
-    //         .then(res => {
-    //             if (res.data?.success) {
-    //                 setClientSecret(res.data.clientSecret)
-    //             }
-    //         })
-    // }, [userFromDB?.vehiclesType])
+    const { data } = useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/create-payment-intent`, { items: vehiclesType })
+            return data.data.data;
+        }
+    });
 
+    useEffect(() => {
+        if (data) setClientSecret(data)
+    }, [data])
+    console.log("clientSecret", clientSecret);
 
-
-
+    // console.log(data);
 
 
     return clientSecret &&
         <Elements options={options} stripe={stripePromise}>
-            <div>
-                <div>Payment</div>
-                <CheckoutForm />
+            <div className="mx-auto flex justify-center items-center">
+                <div className=''>
+                    <div>
+                        <p>Payment Info:</p>
+                        <p>Email: {email}</p>
+                        <p>VehiclesType: {vehiclesType}</p>
+                        <p>Pay Amount: {vehiclesType === "Car" ? 200 : 100}</p>
+                    </div>
+                    <CheckoutForm />
+                </div>
             </div>
         </Elements>
 

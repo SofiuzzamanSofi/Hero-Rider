@@ -46,7 +46,7 @@ async function run() {
                     clientSecret: false,
                 })
             }
-            console.log("payment Intent Hit:");
+            console.log("payment Intent Hit:", items);
             const paymentIntent = await stripeInstance.paymentIntents.create({
                 amount: calculateOrderAmount(items),
                 currency: "usd",
@@ -56,7 +56,7 @@ async function run() {
             });
             res.send({
                 success: true,
-                clientSecret: paymentIntent.client_secret
+                data: paymentIntent.client_secret
             })
         })
 

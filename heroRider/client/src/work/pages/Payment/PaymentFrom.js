@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import "./Payment.module.css"
 import { AuthContext } from "../../context/AuthProvider";
+import { toast } from "react-hot-toast";
 
 
 
@@ -21,6 +22,13 @@ export default function CheckoutForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const paymentElementOptions = {
+        layout: "tabs"
+    }
+
+
+
+
 
     useEffect(() => {
         if (!stripe) {
@@ -59,6 +67,7 @@ export default function CheckoutForm() {
         if (!stripe || !elements) {
             // Stripe.js has not yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
+            toast.error("No stripe and No elements")
             return;
         }
 
@@ -68,10 +77,14 @@ export default function CheckoutForm() {
             elements,
             confirmParams: {
                 // Make sure to change this to your payment completion page
-                return_url: "http://localhost:3000",
+                // return_url: "http://localhost:3000",
             },
         });
-
+        console.log("this is line 83");
+        console.log(error); // add this line to see the value of error
+        if (error) {
+            toast.error("Error from stripe confirmPayments")
+        } else toast.success("success")
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Otherwise, your customer will be redirected to
         // your `return_url`. For some payment methods like iDEAL, your customer will
@@ -86,34 +99,37 @@ export default function CheckoutForm() {
         setIsLoading(false);
     };
 
-    const paymentElementOptions = {
-        layout: "tabs"
-    }
+    const handleChange = (e) => {
+        console.log(e.target); // add this line to see the value of e.target
+        setEmail(e.target.value);
+    };
+
+
+
 
     return (
-        <div className="mx-auto flex justify-center items-center">
-            <form id="payment-form" onSubmit={handleSubmit} className="min-w-[500px] max-w-[500px]">
-                <LinkAuthenticationElement
-                    id="link-authentication-element"
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <PaymentElement id="payment-element" options={paymentElementOptions}
-                    className="mb-6"
-                />
-                <button disabled={isLoading || !stripe || !elements} id="submit"
-                    className="buttonSubmit hover:brightness-125 bg-[#5469d4] text-[#ffffff] rounded-[4px] border-0 px-4 py-3 font-semibold cursor-pointer block w-full transition-all duration-200 ease "
-                >
-                    <span id="button-text">
-                        {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-                    </span>
-                </button>
-                {/* Show any error or success messages */}
-                {message && <div id="payment-message"
-                    className="text-[#697386] text-xs p-3 text-center leading-5"
-                >
-                    {message}
-                </div>}
-            </form>
-        </div>
+        <form id="payment-form" onSubmit={handleSubmit} className="min-w-[500px] max-w-[500px]">
+            <LinkAuthenticationElement
+                id="link-authentication-element"
+            // onChange={(e) => setEmail(e.target.value)}
+            // onChange={handleChange} // change onChange to handleChange
+            />
+            <PaymentElement id="payment-element" options={paymentElementOptions}
+                className="mb-6"
+            />
+            <button disabled={isLoading || !stripe || !elements} id="submit"
+                className="buttonSubmit hover:brightness-125 bg-[#5469d4] text-[#ffffff] rounded-[4px] border-0 px-4 py-3 font-semibold cursor-pointer block w-full transition-all duration-200 ease "
+            >
+                <span id="button-text">
+                    {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+                </span>
+            </button>
+            {/* Show any error or success messages */}
+            {message && <div id="payment-message"
+                className="text-[#697386] text-xs p-3 text-center leading-5"
+            >
+                {message}
+            </div>}
+        </form>
     );
 }

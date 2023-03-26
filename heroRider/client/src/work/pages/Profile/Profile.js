@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { AuthContext } from '../../context/AuthProvider';
 
 import { Link } from 'react-router-dom';
@@ -11,10 +11,11 @@ import axios from 'axios';
 
 function Profile() {
 
-    const { user, userFromDB } = useContext(AuthContext);
-    const { dataQuery, setDataQuery } = useState(null)
+    const { user } = useContext(AuthContext);
 
 
+
+    // name distructure --
     const nameArray = user?.displayName?.split(" ");
     const lastName = nameArray.pop();
     const firstName = nameArray.join(" ")
@@ -22,7 +23,7 @@ function Profile() {
 
 
 
-    const { data, refetch } = useQuery({
+    const { data: userFromDB } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
@@ -30,10 +31,13 @@ function Profile() {
         }
     })
 
-    console.log("userFromDB:1,", userFromDB);
-    console.log("userFirebase:2,", user);
-    console.log("dataQuery:", data);
-    console.log("dataQuery:", dataQuery);
+    // console.log("userFromDB:1,", );
+    // console.log("userFirebase:2,", user);
+    // console.log("dataQuery:", data);
+    // console.log("dataQuery:", dataQuery);
+
+
+
 
 
     return (
@@ -57,7 +61,7 @@ function Profile() {
                                         !userFromDB?.payment ?
                                             <>
                                                 <p className='text-sm'>Pay First Pls</p>
-                                                <Link to="/payment" className='text-red-500 btn btn-xs'>Pay</Link>
+                                                <Link to={`/payment?email=${userFromDB?.email}&vehiclesType=${userFromDB?.vehiclesType}`} className='text-red-500 btn btn-xs'>Pay</Link>
                                             </>
                                             :
                                             <>
