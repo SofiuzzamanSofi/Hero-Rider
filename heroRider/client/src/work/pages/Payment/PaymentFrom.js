@@ -38,6 +38,7 @@ export default function CheckoutForm() {
         const clientSecret = new URLSearchParams(window.location.search).get(
             "payment_intent_client_secret"
         );
+        console.log("clientSecret:", clientSecret);
 
         if (!clientSecret) {
             return;
@@ -73,11 +74,22 @@ export default function CheckoutForm() {
 
         setIsLoading(true);
 
+
+
+        const payElement = elements.getElement(PaymentElement)
+        if (payElement === null) {
+            toast.error("PayElement is Null")
+            return setIsLoading(false);
+        }
+        console.log("payElement:", payElement);
+        // return;
+
+        // const { error } = await stripe.confirmPayment({
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
                 // Make sure to change this to your payment completion page
-                // return_url: "http://localhost:3000",
+                return_url: "http://localhost:3000",
             },
         });
         console.log("this is line 83");
