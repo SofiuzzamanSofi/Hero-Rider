@@ -14,7 +14,6 @@ function Home() {
     const params = new URLSearchParams(location?.search);
     const payment_intent = params.get("payment_intent");
 
-    console.log("payment_intent:", payment_intent);
 
     useEffect(() => {
         if (payment_intent && user?.uid) {
@@ -26,7 +25,7 @@ function Home() {
                     }
                 })
         }
-    }, [payment_intent])
+    }, [payment_intent, user])
 
 
 

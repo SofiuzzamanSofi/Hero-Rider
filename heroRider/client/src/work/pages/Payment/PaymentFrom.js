@@ -108,10 +108,6 @@ export default function CheckoutForm() {
         setIsLoading(false);
     };
 
-    const handleChange = (e) => {
-        console.log(e.target); // add this line to see the value of e.target
-        setEmail(e.target.value);
-    };
 
 
 
@@ -120,8 +116,6 @@ export default function CheckoutForm() {
         <form id="payment-form" onSubmit={handleSubmit} className="min-w-[500px] max-w-[500px]">
             <LinkAuthenticationElement
                 id="link-authentication-element"
-            // onChange={(e) => setEmail(e.target.value)}
-            // onChange={handleChange} // change onChange to handleChange
             />
             <PaymentElement id="payment-element" options={paymentElementOptions}
                 className="mb-6"
