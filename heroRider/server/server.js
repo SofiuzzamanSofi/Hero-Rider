@@ -32,7 +32,7 @@ async function run() {
     try {
 
 
-        //Create a PaymentIntent with the order amount and currency 
+        //Create a PaymentIntent with the order amount and currency (STRIPE)
         const stripeInstance = stripe(process.env.STRIPT_SECRET_SECRET);
         const calculateOrderAmount = (items) => {
             if (items === "Car") return 200 * 100;
@@ -46,7 +46,6 @@ async function run() {
                     clientSecret: false,
                 })
             }
-            console.log("payment Intent Hit:", items);
             const paymentIntent = await stripeInstance.paymentIntents.create({
                 amount: calculateOrderAmount(items),
                 currency: "usd",
@@ -60,10 +59,42 @@ async function run() {
             })
         })
 
+
+
+        // PAYMENT SUCCESS ADD on DB - 
+        app.post("/payment", async (req, res) => {
+            const email = req.query.email;
+            const payment_intent = req.body?.payment_intent;
+            const result = await usersCollection.findOne({ email });
+
+            if (result) {
+                const query = { email, }
+                const update = { $set: { payedStatus: true, trxId: payment_intent, } };
+                const options = {};
+                const result2 = await usersCollection.updateOne(query, update, options);
+
+                if (result2.modifiedCount) {
+                    res.send({
+                        success: true,
+                        message: "Successfully get all products",
+                        data: result,
+                    });
+                }
+            } else {
+                res.send({
+                    success: false,
+                    message: "No user found on this email",
+                });
+            }
+        })
+
+
+
+
+
         // create user on database --- 
         app.post("/users", async (req, res) => {
             const userInfo = req.body;
-            // console.log("body", { userInfo });
             const result = await usersCollection.insertOne(userInfo);
             if (result.acknowledged) {
                 res.status(200).send({
@@ -74,14 +105,14 @@ async function run() {
             }
         });
 
+
+
+
         //get one user --
         app.post("/user", async (req, res) => {
-            // console.log("object");
             const email = req.query.email;
             const result = await usersCollection.findOne({ email });
-            console.log("result", { email });
             if (result) {
-                // console.log(result);
                 res.send({
                     success: true,
                     message: "Successfully get all products",
@@ -94,6 +125,12 @@ async function run() {
                 });
             }
         })
+
+
+
+
+
+
     }
     catch (err) {
         console.log(`error from run function under => catch section: ${err}`.bgRed);
@@ -102,6 +139,9 @@ async function run() {
         console.log("Finally Clg:".yellow);
     }
 };
+
+
+
 run().catch(error => {
     console.log(error.bgRed)
 });
@@ -109,8 +149,15 @@ run().catch(error => {
 
 
 
+
+
+
+
+
+
+
+
 app.get("/", (req, res) => {
-    console.log("browser hit");
     res.status(200).send({
         success: true,
         data: `This is Hero Ride server. Alhamdulillah Running on port: ${port}`,

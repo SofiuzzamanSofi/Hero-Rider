@@ -15,7 +15,7 @@ function Profile() {
 
 
 
-    // name distructure --
+    // name destructure --
     const nameArray = user?.displayName?.split(" ");
     const lastName = nameArray.pop();
     const firstName = nameArray.join(" ")
@@ -30,12 +30,6 @@ function Profile() {
             return data.data.data;
         }
     })
-
-    // console.log("userFromDB:1,", );
-    // console.log("userFirebase:2,", user);
-    // console.log("dataQuery:", data);
-    // console.log("dataQuery:", dataQuery);
-
 
 
 
@@ -58,7 +52,7 @@ function Profile() {
                                 <div className='flex justify-center items-center flex-col gap-2'>
                                     <img src={user?.photoURL} alt="" className='rounded-full max-w-[180px] max-h-[120px]' />
                                     {
-                                        !userFromDB?.payment ?
+                                        !userFromDB?.payedStatus ?
                                             <>
                                                 <p className='text-sm'>Pay First Pls</p>
                                                 <Link to={`/payment?email=${userFromDB?.email}&vehiclesType=${userFromDB?.vehiclesType}`} className='text-red-500 btn btn-xs'>Pay</Link>

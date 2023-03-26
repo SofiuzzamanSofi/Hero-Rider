@@ -34,6 +34,10 @@ const route = createBrowserRouter([
                 path: "/payment",
                 element: <PrivetRoute><Payment /></PrivetRoute>
             },
+            {
+                path: "/successpayment",
+                element: <PrivetRoute><Payment /></PrivetRoute>
+            },
         ]
     }
 ]);

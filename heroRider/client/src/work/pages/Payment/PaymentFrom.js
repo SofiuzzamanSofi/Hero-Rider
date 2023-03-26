@@ -38,7 +38,6 @@ export default function CheckoutForm() {
         const clientSecret = new URLSearchParams(window.location.search).get(
             "payment_intent_client_secret"
         );
-        console.log("clientSecret:", clientSecret);
 
         if (!clientSecret) {
             return;
@@ -79,10 +78,8 @@ export default function CheckoutForm() {
         const payElement = elements.getElement(PaymentElement)
         if (payElement === null) {
             toast.error("PayElement is Null")
-            return setIsLoading(false);
+            return setIsLoading(true);
         }
-        console.log("payElement:", payElement);
-        // return;
 
         // const { error } = await stripe.confirmPayment({
         const { error } = await stripe.confirmPayment({
