@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     PaymentElement,
     LinkAuthenticationElement,
     useStripe,
     useElements
 } from "@stripe/react-stripe-js";
-import "./Payment.module.css"
-import { AuthContext } from "../../context/AuthProvider";
 import { toast } from "react-hot-toast";
 
 
@@ -18,8 +16,6 @@ export default function CheckoutForm() {
     const stripe = useStripe();
     const elements = useElements();
 
-    const { user } = useContext(AuthContext);
-    const [email, setEmail] = useState('');
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const paymentElementOptions = {

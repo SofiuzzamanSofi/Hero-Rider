@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home";
 import HomeDetails from "../pages/Home/HomeDetails";
@@ -35,8 +36,8 @@ const route = createBrowserRouter([
                 element: <PrivetRoute><Payment /></PrivetRoute>
             },
             {
-                path: "/successpayment",
-                element: <PrivetRoute><Payment /></PrivetRoute>
+                path: "/dashboard",
+                element: <PrivetRoute><Dashboard /></PrivetRoute>
             },
         ]
     }

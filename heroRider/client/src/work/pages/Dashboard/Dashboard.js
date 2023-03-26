@@ -1,16 +1,16 @@
 import React from 'react'
 
-function PaymentSuccess() {
+function Dashboard() {
     return (
         <div>
             <div>
-                PaymentSuccess
+                Dashboard
             </div>
             <div>
-                Your payment is successfully proceed.
+
             </div>
         </div>
     )
 }
 
-export default PaymentSuccess
+export default Dashboard
