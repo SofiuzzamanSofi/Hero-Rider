@@ -103,7 +103,7 @@ function Header() {
                                 <li><a>Submenu 2</a></li>
                             </ul>
                         </li>
-                        <li><a>Item 3</a></li>
+                        <li><Link to="/dashboard">Dashboard</Link></li>
                     </ul>
                 </div>
                 <Link to="/" className="btn btn-ghost normal-case text-xl flex justify-center items-center gap-1">
@@ -124,7 +124,7 @@ function Header() {
                             <li><a>Submenu 2</a></li>
                         </ul>
                     </li>
-                    <li><a>Item 3</a></li>
+                    <li><Link to="/dashboard">Dashboard</Link></li>
                 </ul>
             </div>
             <div className="navbar-end">

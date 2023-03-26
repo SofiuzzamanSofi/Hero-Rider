@@ -148,7 +148,7 @@ function Register() {
 
 
                 // ALL INFO / store user on MONGODB ---
-                axios.post(`${process.env.REACT_APP_SERVER_URL}/users`, userInfo1)
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/user`, userInfo1)
                     .then(res => {
                         if (res?.data?.success) {
                             if (!user?.uid) {

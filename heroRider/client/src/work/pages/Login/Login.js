@@ -23,10 +23,10 @@ function Login() {
 
     // check user on database or not ---
     const checkIfUserOnDBorNot = eml => {
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${eml}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/user?email=${eml}`)
             .then(res => {
                 if (res?.data?.success) {
-                    toast.success(`Successfully login ${res?.data?.displayName}.`)
+                    toast.success(`Successfully login ${res?.data?.data?.displayName}.`)
                     navigate("/profile")
                 } else {
                     navigate("/register");

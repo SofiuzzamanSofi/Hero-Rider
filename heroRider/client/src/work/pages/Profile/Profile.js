@@ -26,7 +26,7 @@ function Profile() {
     const { data: userFromDB } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
+            const data = await axios.get(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
             return data.data.data;
         }
     })
@@ -47,6 +47,10 @@ function Profile() {
                             <div className="col-span-full">
                                 <p className="font-medium">Personal Inormation</p>
                                 <p className="">User Type: <span className='text-red-500 font-extrabold'>{userFromDB?.userType}</span></p>
+                                {
+                                    (userFromDB?.trxId && userFromDB?.userType !== "admin") &&
+                                    <p className="">TrxId: <span className='text-xs'>{userFromDB?.trxId}</span></p>
+                                }
                             </div>
                             <div className="col-span-full">
                                 <div className='flex justify-center items-center flex-col gap-2'>
@@ -58,6 +62,7 @@ function Profile() {
                                                 <Link to={`/payment?email=${userFromDB?.email}&vehiclesType=${userFromDB?.vehiclesType}`} className='text-red-500 btn btn-xs'>Pay</Link>
                                             </>
                                             :
+                                            (userFromDB?.userType !== "admin") &&
                                             <>
                                                 <p className='text-sm'>Payed Status</p>
                                                 <button className='text-green-500 btn btn-xs'>Success</button>

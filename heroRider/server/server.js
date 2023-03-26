@@ -93,7 +93,7 @@ async function run() {
 
 
         // create user on database --- 
-        app.post("/users", async (req, res) => {
+        app.post("/user", async (req, res) => {
             const userInfo = req.body;
             const result = await usersCollection.insertOne(userInfo);
             if (result.acknowledged) {
@@ -109,7 +109,7 @@ async function run() {
 
 
         //get one user --
-        app.post("/user", async (req, res) => {
+        app.get("/user", async (req, res) => {
             const email = req.query.email;
             const result = await usersCollection.findOne({ email });
             if (result) {
@@ -127,6 +127,22 @@ async function run() {
         })
 
 
+        //get one All users --
+        app.get("/users", async (req, res) => {
+            const result = await usersCollection.find({}).toArray();
+            if (result.length > 0) {
+                res.send({
+                    success: true,
+                    message: "Successfully retrieved all users",
+                    data: result,
+                });
+            } else {
+                res.send({
+                    success: false,
+                    message: "No users found",
+                });
+            }
+        });
 
 
 
