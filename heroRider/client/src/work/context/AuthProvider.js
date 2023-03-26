@@ -57,28 +57,28 @@ export const AuthProvider = ({ children }) => {
 
 
     // check user on database or not ---
-    useEffect(() => {
-        const checkIfUserOnDBorNot = () => {
-            if (!user?.email && !user?.uid) {
-                return;
-            }
-            else {
-                axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
-                    .then(res => {
-                        if (res?.data?.success) {
-                            setUserFromDB(res?.data?.data)
-                            // toast.success(`Successfully login ${res?.data?.displayName}.`)
+    // useEffect(() => {
+    //     const checkIfUserOnDBorNot = () => {
+    //         if (!user?.email && !user?.uid) {
+    //             return;
+    //         }
+    //         else {
+    //             axios.post(`${process.env.REACT_APP_SERVER_URL}/user?email=${user?.email}`)
+    //                 .then(res => {
+    //                     if (res?.data?.success) {
+    //                         setUserFromDB(res?.data?.data)
+    //                         // toast.success(`Successfully login ${res?.data?.displayName}.`)
 
-                        } else {
-                            // navigate("/register");
-                        }
-                        console.log("under useeffet auth user chek:");
-                        console.log("axios,:", res?.data);
-                    });
-            }
-        };
-        return () => checkIfUserOnDBorNot();
-    }, [user])
+    //                     } else {
+    //                         // navigate("/register");
+    //                     }
+    //                     console.log("under useeffet auth user chek:");
+    //                     console.log("axios,:", res?.data);
+    //                 });
+    //         }
+    //     };
+    //     return () => checkIfUserOnDBorNot();
+    // }, [user])
 
 
 

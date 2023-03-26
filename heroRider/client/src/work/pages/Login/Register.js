@@ -25,7 +25,6 @@ function Register() {
 
     // create user on AUTHENTICATION --
     const userSetOnAuthentication = (email, password, userInfo2) => {
-        console.log("thisi is uth:::", email, password, userInfo2);
         createNewUser(email, password)
             .then(() => {
                 updateUser(userInfo2)
@@ -144,7 +143,6 @@ function Register() {
 
 
                 }
-                // console.log("userInfo:", userInfo);
 
 
                 // ALL INFO / store user on MONGODB ---
@@ -193,7 +191,7 @@ function Register() {
                 className={`grid gap-4 ${clickType ? "translate-x-[-4000px]" : "translate-x-36"} duration-1000 transition-all`}
             >
                 <button className="btn flex justify-between gap-2"
-                    onClick={() => clickTypeFunction("rider")}
+                    onClick={() => clickTypeFunction("Rider")}
                 >
                     <span>
                         Join as a rider
@@ -204,7 +202,7 @@ function Register() {
                 </button>
 
                 <button className="btn flex justify-between gap-2"
-                    onClick={() => clickTypeFunction("lerner")}
+                    onClick={() => clickTypeFunction("Lerner")}
                 >
                     <span>
                         Join as a Driving Lesson Learner

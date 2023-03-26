@@ -101,7 +101,7 @@ function Profile() {
                             </div>
 
                             {
-                                userFromDB?.userType === "rider" &&
+                                userFromDB?.userType.toLowerCase() === "rider" &&
                                 <>
                                     <div className="col-span-full sm:col-span-2">
                                         <label htmlFor="license-number" className="text-sm">License Number</label>

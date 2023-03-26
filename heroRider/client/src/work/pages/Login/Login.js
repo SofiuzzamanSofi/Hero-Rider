@@ -60,8 +60,8 @@ function Login() {
                         Check your Email Pls.
                         `)
                     })
-                    .catch(err => {
-                        toast(`Welcome ${email} Pls Fillup All Steps.`);
+                    .catch(() => {
+                        toast(`Welcome ${email} Pls Fill Up All Steps.`);
                         setUser({ email, })
                         navigate("/register")
                     })
@@ -77,8 +77,7 @@ function Login() {
         loginSocial(googleProvider)
             .then(result => {
                 checkIfUserOnDBorNot(result?.user?.email)
-            }).catch(err => {
-                console.log("error from google provider catch section:", err);
+            }).catch(() => {
             })
     };
 

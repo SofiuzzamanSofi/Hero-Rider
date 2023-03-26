@@ -82,7 +82,7 @@ export default function CheckoutForm() {
             elements,
             confirmParams: {
                 // Make sure to change this to your payment completion page
-                return_url: "http://localhost:3000",
+                return_url: process.env.REACT_APP_CLIENT_URL,
             },
         });
         console.log("this is line 83");

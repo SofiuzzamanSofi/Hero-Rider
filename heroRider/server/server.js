@@ -129,12 +129,19 @@ async function run() {
 
         //get one All users --
         app.get("/users", async (req, res) => {
-            const result = await usersCollection.find({}).toArray();
-            if (result.length > 0) {
+            const pageNo = parseInt(req?.query?.pageNo)
+            const perPageCountSize = parseInt(req?.query?.perPageCountSize);
+            const cursor = usersCollection.find({});
+            const users = await cursor.skip(pageNo * perPageCountSize).limit(perPageCountSize).toArray();
+            const count = await usersCollection.countDocuments();
+            // console.log("query:", query);
+            // const result = await usersCollection.find({}).toArray();
+            if (users.length > 0) {
                 res.send({
                     success: true,
                     message: "Successfully retrieved all users",
-                    data: result,
+                    data: users,
+                    count,
                 });
             } else {
                 res.send({
