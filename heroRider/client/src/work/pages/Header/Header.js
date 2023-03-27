@@ -64,7 +64,7 @@ function Header() {
                 </button>
             </div>
             <div>
-                <Link to="/profile">Dashboard</Link>
+                <Link to="/dashboard">Dashboard</Link>
             </div>
             <div>
                 <Link to="/profile">Profile</Link>
