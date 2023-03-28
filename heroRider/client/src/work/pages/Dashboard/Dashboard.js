@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 import { BiXCircle } from 'react-icons/bi';
+import { async } from '@firebase/util';
 
 
 
@@ -13,17 +14,28 @@ import { BiXCircle } from 'react-icons/bi';
 function Dashboard() {
 
 
-
+    // get user form Auth Context ---
     const { user } = useContext(AuthContext);
+
+    // get all Users form database by axios useffect --
     const [allUsers, setAllUsers] = useState(null);
+
+    // modal open closed ---
     const [modalOpen, setModalOpen] = useState(false);
+
     const navigate = useNavigate();
+
+
+    // pagination --- 
+    const [pageCount, setPageCount] = useState(0)
+    const [pageNo, setPageNo] = useState(0);
+    let perPageCountSize = 10;
+    const pages = Math.ceil(pageCount / perPageCountSize)
 
 
     // click checkbox --- 
     const [checkSelect, setCheckSelect] = useState([]);
     const checkBoxFunction = (_id) => {
-        console.log("_id:", _id);
         const find = checkSelect?.includes(_id);
         if (find) {
             const index = checkSelect.indexOf(_id);
@@ -36,14 +48,12 @@ function Dashboard() {
         }
     };
 
+    // Delete all press && modal open --
     const deleteAllButtonFn = () => {
         setModalOpen(true)
-        // console.log(userFromDB?.userType);
-        console.log("checkSelect", checkSelect?.length);
     };
-    const deleteYesButtonFn = () => {
 
-    }
+    // modal closed --
     window.addEventListener("scroll", () => {
         deleteNoClosedButtonFn()
     })
@@ -51,17 +61,29 @@ function Dashboard() {
         setModalOpen(false)
     }
 
+    // DELETE Yes / confirm press button fu --
+    const deleteYesButtonFn = async () => {
+        if (modalOpen) {
+            console.log("checkSelect:", checkSelect);
+            const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/user/activity`, { checkSelect, })
+            if (data?.data) {
+                console.log("data.success, ?.success");
+            } else { console.log("data.success.else:"); }
+        }
+    }
 
 
 
 
 
-    // pagination --- 
-    const [pageCount, setPageCount] = useState(0)
-    const [pageNo, setPageNo] = useState(0);
-    let perPageCountSize = 10;
-    const pages = Math.ceil(pageCount / perPageCountSize)
 
+
+
+
+
+
+
+    // check user is admin or not ----
     const { data: userFromDB } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
@@ -73,9 +95,7 @@ function Dashboard() {
         }
     });
 
-
-
-
+    // if user is not admin go back to profile page ----
     useEffect(() => {
         if (userFromDB?.userType !== "admin") {
             return navigate("/profile")
@@ -83,6 +103,9 @@ function Dashboard() {
     }, [userFromDB, navigate]);
 
 
+
+
+    // get users/ data by pagination ---
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/users?pageNo=${pageNo}&perPageCountSize=${perPageCountSize}`)
             .then(data => {
@@ -91,13 +114,15 @@ function Dashboard() {
             })
     }, [pageNo, pageCount, perPageCountSize]);
 
-    // console.log("allUsers:", allUsers?.length);
+
+
+
+
+
 
     return (
         <div>
-            <div
-
-            >
+            <div>
                 <div>
                     <p className='text-center font-semibold text-2xl'>Dashboard</p>
                     <p>Welcome: {userFromDB?.displayName}</p>
@@ -124,9 +149,11 @@ function Dashboard() {
                             Delete All Checked
                         </button>
                     </div>
-                    <div
-                    // onClick={deleteNoClosedButtonFn}
-                    >
+
+
+
+
+                    <div                    >
                         <table className="table w-full">
                             {/* head */}
                             <thead>
@@ -200,23 +227,32 @@ function Dashboard() {
                 </div>
             </div>
 
+
+
+
+
+
+
             {
                 modalOpen &&
-                <div className='fixed top-0 bottom-0 left-0 right-0 min-h-screen flex justify-center items-center'
-                    onBlur={deleteNoClosedButtonFn}
+                <div className='fixed top-0 bottom-0 left-0 right-0 min-h-screen flex justify-center items-center z-50'
                 >
-                    <div className='border bg-slate-600 min-h-[220px] min-w-[320px] p-4 rounded-md relative'
-
+                    <div className='border bg-slate-600 min-h-[200px] min-w-[280px] p-4 rounded-md relative'
+                    // onBlur={deleteNoClosedButtonFn}
                     >
                         <button className='absolute top-4 right-4'                                >
                             <BiXCircle className='w-8 h-8 bg-slate-900 rounded-full text-white'
                                 onClick={deleteNoClosedButtonFn}
                             />
                         </button>
+                        <div className='pt-14 text-white'>
+                            <p className='text-center'>Do you want to Remove/Delete</p>
+                            <p className='text-center'> all <span className='font-bold text-red-600'>{checkSelect?.length}</span> users</p>
+                        </div>
                         <div className='absolute bottom-2 left-0 right-0'>
                             <div className='flex justify-between px-4'>
                                 <button className='btn bg-slate-900 text-white'
-                                // onClick={}
+                                    onClick={deleteYesButtonFn}
                                 > Yes</button>
                                 <button className='btn bg-slate-900 text-white'
                                     onClick={deleteNoClosedButtonFn}
