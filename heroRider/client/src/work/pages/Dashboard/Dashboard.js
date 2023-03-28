@@ -217,16 +217,18 @@ function Dashboard() {
                 <div className='flex justify-center items-center py-4 mt-4 border-y-[1px]'>
                     <div>
                         <p className='text-center'>Currently Selected Page: {pageNo + 1}</p>
-                        {
-                            [...Array(pages).keys()].map((num, i) => <button
-                                disabled={num === pageNo}
-                                key={i}
-                                className={`border m-1 px-1 ${num === pageNo ? "bg-sky-500 text-white" : "bg-slate-700 text-white"}`}
-                                onClick={() => setPageNo(num)}
-                            >
-                                {num + 1}
-                            </button>)
-                        }
+                        <p className='flex justify-center items-center'>
+                            {
+                                [...Array(pages).keys()].map((num, i) => <button
+                                    disabled={num === pageNo}
+                                    key={i}
+                                    className={`border m-1 px-1 ${num === pageNo ? "bg-sky-500 text-white" : "bg-slate-700 text-white"}`}
+                                    onClick={() => setPageNo(num)}
+                                >
+                                    {num + 1}
+                                </button>)
+                            }
+                        </p>
                     </div>
                 </div>
             </div>
