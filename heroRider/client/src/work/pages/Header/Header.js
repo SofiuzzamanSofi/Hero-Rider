@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import hIcon from "../../assets/hIcon.png"
 import { AuthContext } from '../../context/AuthProvider';
 import { FaTimes } from "react-icons/fa";
-
+import { IoMdLogIn } from "react-icons/io";
 
 
 
@@ -135,10 +135,12 @@ function Header() {
                 {
                     !user?.uid ?
 
-                        <Link to="login" className="btn"> Log In</Link>
+                        <Link to="login" className="btn">
+                            <IoMdLogIn className='w-8 h-8' />
+                        </Link>
                         :
                         <img
-                            className='rounded-full w-12 h-12 cursor-pointer'
+                            className='rounded-full w-12 h-12 cursor-pointer mr-2 mt-2'
                             src={user?.photoURL || noImageFoundUrl} alt="" title={user?.email}
                             onClick={() => setMiniProfile(prv => !prv)}
                         />
