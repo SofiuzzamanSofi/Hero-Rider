@@ -194,7 +194,7 @@ function Register() {
                     onClick={() => clickTypeFunction("Rider")}
                 >
                     <span>
-                        Join as a rider
+                        Join as a Rider
                     </span>
                     <span>
                         <BsFillArrowRightCircleFill />
@@ -269,13 +269,7 @@ function Register() {
                                             <input id="state" name="state" type="text" placeholder="" className="p-2 w-full rounded-md focus:ring focus:ring-opacity-75 focus:ring-violet-400 border-gray-700 text-gray-900 dark:text-white" required />
                                         </div>
                                         {
-                                            clickType === "rider" ?
-                                                ""
-                                                :
-                                                ""
-                                        }
-                                        {
-                                            clickType === "rider" ?
+                                            clickType === "Rider" ?
                                                 <>
                                                     <div className="col-span-full sm:col-span-2">
                                                         <label htmlFor="license-number" className="text-sm">License Number</label>
@@ -313,7 +307,7 @@ function Register() {
                                             </select>
                                         </div>
                                         {
-                                            clickType === "rider" ?
+                                            clickType === "Rider" ?
                                                 <>
                                                     <div className="col-span-full sm:col-span-3">
                                                         <label htmlFor="company-name" className="text-sm">Company Name</label>
