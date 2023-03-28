@@ -54,7 +54,7 @@ function Profile() {
                             </div>
                             <div className="col-span-full">
                                 <div className='flex justify-center items-center flex-col gap-2'>
-                                    <img src={user?.photoURL} alt="" className='rounded-full max-w-[180px] max-h-[120px]' />
+                                    <img src={user?.photoURL} alt="" className='rounded-full w-[120px] h-[120px]' />
                                     {
                                         !userFromDB?.payedStatus ?
                                             <>
