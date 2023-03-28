@@ -151,11 +151,10 @@ async function run() {
 
 
 
-        // do users delet / bulk user delete by selection checkselected ---
+        //  bulk user delete by selection checkselected ---
         //get one user --
         app.post("/user/activity", async (req, res) => {
             const { checkSelect } = req.body;
-            console.log("checkSelect--", checkSelect);
             if (!checkSelect || checkSelect.length <= 0) {
                 res.send({
                     success: false,
@@ -165,12 +164,12 @@ async function run() {
                 try {
                     const ids = checkSelect.map(id => new ObjectId(id))
                     const result = await usersCollection.deleteMany({ _id: { $in: ids } });
-                    console.log("result:", result);
-                    console.log("Deleted IDs:", checkSelect.filter(id => result?.deletedIds?.includes(id)));
-                    res.send({
-                        success: true,
-                        message: `${result.deletedCount} document(s) deleted successfully.`,
-                    });
+                    if (result?.deletedCount) {
+                        res.send({
+                            success: true,
+                            message: `${result.deletedCount} document(s) deleted successfully.`,
+                        });
+                    }
                 } catch (err) {
                     console.log(err);
                     res.send({

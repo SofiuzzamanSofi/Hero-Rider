@@ -32,6 +32,8 @@ function Dashboard() {
     let perPageCountSize = 10;
     const pages = Math.ceil(pageCount / perPageCountSize)
 
+    // after bult delete fetch data again --
+    const [dataAgain, setDataAgain] = useState(false)
 
     // click checkbox --- 
     const [checkSelect, setCheckSelect] = useState([]);
@@ -64,10 +66,11 @@ function Dashboard() {
     // DELETE Yes / confirm press button fu --
     const deleteYesButtonFn = async () => {
         if (modalOpen) {
-            console.log("checkSelect:", checkSelect);
             const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/user/activity`, { checkSelect, })
-            if (data?.data) {
-                console.log("data.success, ?.success");
+            if (data?.data?.success) {
+                setDataAgain(!dataAgain);
+                deleteNoClosedButtonFn();
+                setCheckSelect([]);
             } else { console.log("data.success.else:"); }
         }
     }
@@ -112,7 +115,7 @@ function Dashboard() {
                 setAllUsers(data.data?.data.reverse())
                 setPageCount(data.data?.count)
             })
-    }, [pageNo, pageCount, perPageCountSize]);
+    }, [pageNo, pageCount, perPageCountSize, dataAgain]);
 
 
 
@@ -176,7 +179,8 @@ function Dashboard() {
                                             className='flex gap-2'
                                         >
                                             <input type="checkbox" name="" id=""
-                                                onClick={() => checkBoxFunction(u._id)}
+                                                checked={checkSelect.includes(u._id)}
+                                                onChange={() => checkBoxFunction(u._id)}
                                             />
                                             <span>{(pageNo * perPageCountSize) + i + 1}</span>
                                         </th>
